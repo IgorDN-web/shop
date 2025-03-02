@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite';
-import { globSync } from 'glob';
+import { glob } from 'glob';
+import injectHTML from 'vite-plugin-html-inject';
 import FullReload from 'vite-plugin-full-reload';
+import SortCss from 'postcss-sort-media-queries';
 
 export default defineConfig(({ command }) => {
   return {
@@ -8,11 +10,10 @@ export default defineConfig(({ command }) => {
       [command === 'serve' ? 'global' : '_global']: {},
     },
     root: 'src',
-    base: "/shop/",
     build: {
       sourcemap: true,
       rollupOptions: {
-        input: globSync('./src/*.html'),
+        input: glob.sync('./src/*.html'),
         output: {
           manualChunks(id) {
             if (id.includes('node_modules')) {
@@ -33,13 +34,15 @@ export default defineConfig(({ command }) => {
           },
         },
       },
-      // Меняем директорию билда, чтобы GitHub Pages видел index.html
-      outDir: 'dist',
+      outDir: '../dist',
       emptyOutDir: true,
     },
     plugins: [
+      injectHTML(),
       FullReload(['./src/**/**.html']),
+      SortCss({
+        sort: 'mobile-first',
+      }),
     ],
   };
 });
-
