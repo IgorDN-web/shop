@@ -33,7 +33,8 @@ export default defineConfig(({ command }) => {
           },
         },
       },
-      outDir: '../dist',
+      // Меняем директорию билда, чтобы GitHub Pages видел index.html
+      outDir: 'dist',
       emptyOutDir: true,
     },
     plugins: [
@@ -41,3 +42,4 @@ export default defineConfig(({ command }) => {
     ],
   };
 });
+
